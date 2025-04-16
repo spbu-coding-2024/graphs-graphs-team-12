@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.compose.ui:ui-tooling-preview-desktop:1.8.0-beta02" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.compose.ui" artifactId="ui-tooling-preview-desktop" version="1.8.0-beta02" baseVersion="1.8.0-beta02" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-tooling-preview-desktop/1.8.0-beta02/bd4651d3cf7078cb5498e69bfc8f22ecc02ab48d/ui-tooling-preview-desktop-1.8.0-beta02.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
