@@ -1,6 +1,5 @@
 package model.algo
 import graph.*
-import java.util.SortedSet
 import kotlin.math.max
 
 fun Graph.find_scc(): MutableSet<MutableSet<Vertex>> {
