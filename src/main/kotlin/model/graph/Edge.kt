@@ -7,4 +7,8 @@ class Edge(internal val from: Vertex, internal val to: Vertex, internal val weig
 
         return this.from == other.from && this.to == other.to && this.weight == other.weight
     }
+
+    override fun hashCode(): Int {
+        return this.from.hashCode() xor this.to.hashCode() xor  this.weight.hashCode()
+    }
 }
