@@ -19,6 +19,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation(compose.desktop.currentOs)
+    implementation("org.xerial:sqlite-jdbc:3.49.1.0")
     linter("com.pinterest.ktlint:ktlint-cli:1.5.0")
 }
 
@@ -41,6 +42,7 @@ tasks.jacocoTestReport {
         html.outputLocation = layout.buildDirectory.dir("jacocoReports/")
     }
 }
+
 
 tasks.test {
     dependsOn(lintCheck)
