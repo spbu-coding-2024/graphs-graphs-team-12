@@ -9,11 +9,10 @@ class Graph_Loader(val graph: Graph, val path: String) {
     private val db_path: String = "jdbc:sqlite:" + this.path
 
     private fun connect(): Connection? {
-        try {
-            return DriverManager.getConnection(this.db_path)
-        }
-        catch (e: SQLException) {
-            return null
+        return try {
+            DriverManager.getConnection(this.db_path)
+        } catch (e: SQLException) {
+            null
         }
     }
 
@@ -55,17 +54,19 @@ class Graph_Loader(val graph: Graph, val path: String) {
         try {
             conn.createStatement().use {
                 statement -> val query = "CREATE TABLE vertices " +
-                    "(vertex INTEGER PRIMARY KEY)"
+                    "(vertex INTEGER PRIMARY KEY x DOUBLE y DOUBLE)"
                 statement.execute(query)
             }
 
-            val insert_query = "INSERT INTO vertices(vertex) VALUES(?)"
+            val insert_query = "INSERT INTO vertices(vertex, x, y) VALUES(?, ?, ?)"
             conn.prepareStatement(insert_query).use {
                 prep_statement ->
                 var index = -1
                 val indexation: Map<Vertex, Int>
                 indexation = this.graph.vertices.associate { vertex -> index += 1; vertex to index}
-                indexation.keys.forEach { vertex -> prep_statement.setInt(1, indexation[vertex]!!);
+                indexation.keys.forEach { vertex -> prep_statement.setInt(1, indexation[vertex]!!)
+                    prep_statement.setDouble(2, vertex.x)
+                    prep_statement.setDouble(3, vertex.y)
                     prep_statement.addBatch()}
                 prep_statement.executeBatch()
                 return indexation
