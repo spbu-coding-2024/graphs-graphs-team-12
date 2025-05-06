@@ -82,11 +82,11 @@ class Graph_Loader(val graph: Graph, val path: String) {
             conn.createStatement().use {
                 statement ->
                 val query = "CREATE TABLE edges " +
-                        "(from INTEGER to INTEGER weight DOUBLE)"
+                        "(from_vertex INTEGER to_vertex INTEGER weight DOUBLE)"
                 statement.execute(query)
             }
 
-            val insert_query = "INSERT INTO edges(from, to, weight) VALUES(?, ?, ?)"
+            val insert_query = "INSERT INTO edges(from_vertex, to_vertex, weight) VALUES(?, ?, ?)"
             val prep_statement = conn.prepareStatement(insert_query).use {
                 prep_statement ->
                 this.graph.edges.keys.forEach { vertex ->
