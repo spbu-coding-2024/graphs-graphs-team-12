@@ -9,9 +9,16 @@ class Graph(val directed: Boolean, val weighted: Boolean) {
     }
 
     internal fun add_edge(u: Vertex, v: Vertex, w: Double = 1.0): Boolean {
+        if (u == v) {
+            return false
+        }
+        if (!this.weighted && w != 1.0) {
+            return false
+        }
         if ((edges[u])?.any { it.to == v } == true) {
             return false
         }
+
         edges[u]?.add(Edge(u, v, w)) ?: edges.put(u, mutableSetOf(Edge(u, v, w)))
         if (!this.directed) {
             edges[v]?.add(Edge(v, u, w)) ?: edges.put(v, mutableSetOf(Edge(v, u, w)))
