@@ -1,5 +1,3 @@
-import org.jetbrains.compose.desktop.*
-
 val linter by configurations.creating
 
 plugins {

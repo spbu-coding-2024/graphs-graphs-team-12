@@ -1,29 +1,31 @@
-package model_tests
+package modelTests
 
-import graph.*
-import org.junit.jupiter.api.*
+import graph.Graph
+import graph.Vertex
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class Graph {
+class GraphTests {
     @Test
     @DisplayName("Adjacency list for empty graph")
     fun empty_adj_list() {
-        val g = Graph(false, false, false)
-        assertEquals(emptyMap(), g.get_adjacency_list())
+        val g = Graph(false, false)
+        assertEquals(emptyMap<Vertex, Set<Pair<Vertex, Double>>>(), g.getAdjacencyList())
     }
 
     @Test
     @DisplayName("Adjacency list of simple graph")
     fun simple_adj_list() {
-        val g = Graph(false, false, false)
+        val g = Graph(false, false)
         val x = Vertex(1.0, 1.0)
         val y = Vertex(1.0, 1.0)
         val z = Vertex(1.0, 1.0)
-        g.add_vertex(x)
-        g.add_vertex(y)
-        g.add_vertex(z)
-        g.add_edge(x, y)
-        assertEquals(mapOf<Vertex, Set<Pair<Vertex, Double>>>(x to setOf(y to 1.0), y to setOf(x to 1.0)), g.get_adjacency_list())
+        g.addVertex(x)
+        g.addVertex(y)
+        g.addVertex(z)
+        g.addEdge(x, y)
+        assertEquals(mapOf<Vertex, Set<Pair<Vertex, Double>>>(x to setOf(y to 1.0), y to setOf(x to 1.0)), g.getAdjacencyList())
     }
 
     @Test
