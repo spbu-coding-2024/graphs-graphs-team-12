@@ -1,7 +1,7 @@
 package modelTests
 
-import graph.Graph
-import graph.Vertex
+import model.graph.Graph
+import model.graph.Vertex
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
