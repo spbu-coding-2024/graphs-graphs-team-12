@@ -1,4 +1,4 @@
-package graph
+package model.graph
 
 class Vertex(
     internal var x: Double,
