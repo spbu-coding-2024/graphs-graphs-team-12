@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.compose") version "1.8.0-beta02"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
+    jacoco
 }
 
 group = "org.graphs.analyzer"
@@ -32,9 +33,19 @@ val format by tasks.registering(JavaExec::class) {
     args = listOf<String>("--format")
 }
 
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoReports/")
+    }
+}
+
 tasks.test {
     dependsOn(lintCheck)
     dependsOn(format)
+    finalizedBy(tasks.jacocoTestReport)
     useJUnitPlatform()
 }
 
