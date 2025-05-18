@@ -1,4 +1,4 @@
-package model.graph
+package graph
 
 class Edge(
     internal val from: Vertex,

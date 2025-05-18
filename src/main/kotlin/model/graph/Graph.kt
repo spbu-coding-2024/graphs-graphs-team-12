@@ -1,4 +1,4 @@
-package model.graph
+package graph
 
 class Graph(
     val directed: Boolean,
