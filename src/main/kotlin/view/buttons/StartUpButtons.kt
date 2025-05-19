@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +20,8 @@ enum class ButtonType {
 fun startUpButton(
     type: ButtonType,
     text: String,
+    showParentWindow: MutableState<Boolean>,
+    showGraph: MutableState<Boolean>,
 ) {
     val openWin = remember { mutableStateOf(false) }
     Button(
@@ -31,9 +34,9 @@ fun startUpButton(
     }
     if (openWin.value) {
         when (type) {
-            ButtonType.SQL -> fileKitOpener(openWin, "db")
-            ButtonType.JSON -> fileKitOpener(openWin, "json")
-            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher")
+            ButtonType.SQL -> fileKitOpener(openWin, "db", showParentWindow, showGraph)
+            ButtonType.JSON -> fileKitOpener(openWin, "json", showParentWindow, showGraph)
+            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showParentWindow, showGraph)
         }
     }
 }

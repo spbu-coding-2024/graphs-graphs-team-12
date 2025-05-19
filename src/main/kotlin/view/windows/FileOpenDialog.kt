@@ -9,6 +9,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import view.windows.graphWindow
 import javax.swing.JFileChooser
 import javax.swing.UIManager
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -41,11 +42,13 @@ fun materialFileOpener(
 fun fileKitOpener(
     shouldShow: MutableState<Boolean>,
     extension: String,
+    showParentWindow: MutableState<Boolean>,
+    showGraph: MutableState<Boolean>,
 ) {
     if (shouldShow.value) {
-        var files =
+        var file: MutableState<PlatformFile> =
             remember {
-                mutableStateOf(mutableSetOf<PlatformFile>())
+                mutableStateOf(PlatformFile(""))
             }
         val launcher =
             rememberFilePickerLauncher(
@@ -54,11 +57,13 @@ fun fileKitOpener(
                 title = "Выберите .$extension файл",
                 onResult = { it ->
                     if (it != null) {
-                        files.value.add(it)
+                        file.value = it
+                        showParentWindow.value = false
+                        showGraph.value = true
+                        shouldShow.value = false
                     }
                 },
             )
         launcher.launch()
-        shouldShow.value = false
     }
 }
