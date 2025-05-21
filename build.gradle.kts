@@ -43,7 +43,6 @@ tasks.jacocoTestReport {
     }
 }
 
-
 tasks.test {
     dependsOn(lintCheck)
     dependsOn(format)
