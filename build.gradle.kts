@@ -24,6 +24,7 @@ configurations.all {
 dependencies {
     testImplementation(kotlin("test"))
     implementation(compose.desktop.currentOs)
+    implementation("org.xerial:sqlite-jdbc:3.49.1.0")
     linter("com.pinterest.ktlint:ktlint-cli:1.5.0")
     implementation("org.gephi:gephi-toolkit:0.10.1")
     implementation(files("./gephi_tools/org-gephi-graph-api.jar"))

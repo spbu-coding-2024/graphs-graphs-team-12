@@ -6,6 +6,7 @@ import androidx.compose.ui.window.application
 fun app() {
 }
 
+
 fun main() =
     application {
         Window(onCloseRequest = ::exitApplication) {

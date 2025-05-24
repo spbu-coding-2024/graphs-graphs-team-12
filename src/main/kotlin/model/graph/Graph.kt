@@ -25,7 +25,6 @@ class Graph(
         if ((edges[u])?.any { it.to == v } == true) {
             return false
         }
-
         edges[u]?.add(Edge(u, v, w)) ?: edges.put(u, mutableSetOf(Edge(u, v, w)))
         if (!this.directed) {
             edges[v]?.add(Edge(v, u, w)) ?: edges.put(v, mutableSetOf(Edge(v, u, w)))
