@@ -40,6 +40,7 @@ fun graphWindow(show: MutableState<Boolean>) {
                         .offset(x = Dp((maxWidth.value * 0.2).toFloat()))
                         .background(Color.LightGray),
             ) {
+                val myScope = this
             }
         }
     }
