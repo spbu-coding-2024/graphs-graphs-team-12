@@ -7,9 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import view.windows.fileKitOpener
+
+enum class ButtonType {
+    SQL,
+    JSON,
+    NEO4J,
+}
 
 @Composable
-fun startUpButton(text: String) {
+fun startUpButton(
+    type: ButtonType,
+    text: String,
+) {
     val openWin = remember { mutableStateOf(false) }
     Button(
         onClick = { openWin.value = true },
@@ -20,5 +30,10 @@ fun startUpButton(text: String) {
         Text(text)
     }
     if (openWin.value) {
+        when (type) {
+            ButtonType.SQL -> fileKitOpener(openWin, "db")
+            ButtonType.JSON -> fileKitOpener(openWin, "json")
+            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher")
+        }
     }
 }

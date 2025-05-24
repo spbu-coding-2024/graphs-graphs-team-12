@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import view.buttons.ButtonType
 import view.buttons.startUpButton
 import view.buttons.startUpText
 
@@ -32,9 +33,9 @@ fun startUpLayout() {
                     ),
         ) {
             startUpText("Выберите, каким образом хотите загрузить граф:")
-            startUpButton("SQLite database")
-            startUpButton("Neo4j database")
-            startUpButton("JSON")
+            startUpButton(ButtonType.SQL, "SQLite database")
+            startUpButton(ButtonType.NEO4J, "Neo4j database")
+            startUpButton(ButtonType.JSON, "JSON")
         }
     }
 }
