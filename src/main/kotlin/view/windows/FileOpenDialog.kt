@@ -3,9 +3,7 @@ package view.windows
 import androidx.compose.material.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
@@ -44,12 +42,9 @@ fun fileKitOpener(
     extension: String,
     showParentWindow: MutableState<Boolean>,
     showGraph: MutableState<Boolean>,
+    file: MutableState<String>,
 ) {
     if (shouldShow.value) {
-        var file: MutableState<PlatformFile> =
-            remember {
-                mutableStateOf(PlatformFile(""))
-            }
         val launcher =
             rememberFilePickerLauncher(
                 type = FileKitType.File(extension),
@@ -57,7 +52,7 @@ fun fileKitOpener(
                 title = "Выберите .$extension файл",
                 onResult = { it ->
                     if (it != null) {
-                        file.value = it
+                        file.value = it.absolutePath()
                         showParentWindow.value = false
                         showGraph.value = true
                         shouldShow.value = false

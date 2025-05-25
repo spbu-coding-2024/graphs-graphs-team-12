@@ -22,6 +22,7 @@ fun startUpButton(
     text: String,
     showParentWindow: MutableState<Boolean>,
     showGraph: MutableState<Boolean>,
+    file: MutableState<String>,
 ) {
     val openWin = remember { mutableStateOf(false) }
     Button(
@@ -34,9 +35,9 @@ fun startUpButton(
     }
     if (openWin.value) {
         when (type) {
-            ButtonType.SQL -> fileKitOpener(openWin, "db", showParentWindow, showGraph)
-            ButtonType.JSON -> fileKitOpener(openWin, "json", showParentWindow, showGraph)
-            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showParentWindow, showGraph)
+            ButtonType.SQL -> fileKitOpener(openWin, "db", showParentWindow, showGraph, file)
+            ButtonType.JSON -> fileKitOpener(openWin, "json", showParentWindow, showGraph, file)
+            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showParentWindow, showGraph, file)
         }
     }
 }

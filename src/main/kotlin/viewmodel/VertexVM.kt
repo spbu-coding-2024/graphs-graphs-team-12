@@ -1,22 +1,80 @@
 package viewmodel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import graph.Vertex
 
-class VertexVM(val vertex: Vertex) {
-    val xVM: MutableState<Double> = mutableDoubleStateOf(vertex.x)
-    val yVM: MutableState<Double> = mutableDoubleStateOf(vertex.y)
-    val radius: MutableState<Double> = mutableDoubleStateOf(1.0)
-    val color: MutableState<Color> = mutableStateOf<Color>(Color.Blue)
+class VertexVM(
+    val vertex: Vertex,
+    val xMax: State<Float>,
+    val yMax: State<Float>,
+) {
+    val xRatio: MutableState<Double> = mutableDoubleStateOf(vertex.x / xMax.value)
+    val yRatio: MutableState<Double> = mutableDoubleStateOf(vertex.y / yMax.value)
+    val xVM: MutableState<Double> = mutableDoubleStateOf(xRatio.value * xMax.value)
+    val yVM: MutableState<Double> = mutableDoubleStateOf(yRatio.value * yMax.value)
+    val radius: MutableState<Double> = mutableDoubleStateOf(10.0)
+    val color: MutableState<Color> = mutableStateOf<Color>(Color.Black)
 
     fun onDrag(offset: Offset) {
-        xVM.value += offset.x
-        yVM.value += offset.y
+        xVM.value = xVM.value + offset.x
+        if (xVM.value > xMax.value) {
+            xVM.value = xMax.value.toDouble()
+        }
+        if (xVM.value < 0) {
+            xVM.value = 0.0
+        }
         vertex.x = xVM.value
+
+        yVM.value = yVM.value + offset.y
+        if (yVM.value > yMax.value) {
+            yVM.value = yMax.value.toDouble()
+        }
+        if (yVM.value < 0) {
+            yVM.value = 0.0
+        }
         vertex.y = yVM.value
+//        if (offset.x > 0) {
+//            xVM.value =
+//                (
+//                    if (xVM.value + offset.x < xMax.value) {
+//                        xVM.value + offset.x
+//                    } else {
+//                        xMax.value
+//                    }
+//                ).toDouble()
+//        } else {
+//            xVM.value =
+//                (
+//                    if (xVM.value + offset.x > 0.0) {
+//                        xVM.value + offset.x
+//                    } else {
+//                        0.0
+//                    }
+//                ).toDouble()
+//        }
+//        if (offset.y > 0) {
+//            yVM.value =
+//                (
+//                    if (yVM.value + offset.y < yMax.value) {
+//                        yVM.value + offset.y
+//                    } else {
+//                        yMax.value
+//                    }
+//                ).toDouble()
+//        } else {
+//            yVM.value =
+//                (
+//                    if (yVM.value + offset.y > 0.0) {
+//                        yVM.value + offset.y
+//                    } else {
+//                        0.0
+//                    }
+//                ).toDouble()
+//        }
     }
 }

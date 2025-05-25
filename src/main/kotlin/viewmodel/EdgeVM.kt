@@ -1,15 +1,24 @@
 package viewmodel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
 
-class EdgeVM(val from: VertexVM, val to: VertexVM, val scope: DrawScope) {
+class EdgeVM(
+    from: VertexVM,
+    to: VertexVM,
+    val directed: Boolean,
+) {
     val color: MutableState<Color> = mutableStateOf(Color.Black)
-    val startPoint: Pair<MutableState<Double>, MutableState<Double>> = Pair(from.xVM,
-        from.yVM)
-    val endPoint: Pair<MutableState<Double>, MutableState<Double>> = Pair(from.xVM,
-        from.yVM)
-
+    val startPoint: Pair<State<Double>, State<Double>> =
+        Pair(
+            from.xVM,
+            from.yVM,
+        )
+    val endPoint: Pair<State<Double>, State<Double>> =
+        Pair(
+            to.xVM,
+            to.yVM,
+        )
 }

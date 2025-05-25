@@ -19,7 +19,8 @@ import view.windows.graphWindow
 fun startUpLayout() {
     val show = remember { mutableStateOf(true) }
     val showGraph = remember { mutableStateOf((false)) }
-    graphWindow(showGraph)
+    val file = remember { mutableStateOf("") }
+    graphWindow(showGraph, file)
     if (show.value) {
         BoxWithConstraints(
             modifier =
@@ -40,9 +41,9 @@ fun startUpLayout() {
                         ),
             ) {
                 startUpText("Выберите, каким образом хотите загрузить граф:")
-                startUpButton(ButtonType.SQL, "SQLite database", show, showGraph)
-                startUpButton(ButtonType.NEO4J, "Neo4j database", show, showGraph)
-                startUpButton(ButtonType.JSON, "JSON", show, showGraph)
+                startUpButton(ButtonType.SQL, "SQLite database", show, showGraph, file)
+                startUpButton(ButtonType.NEO4J, "Neo4j database", show, showGraph, file)
+                startUpButton(ButtonType.JSON, "JSON", show, showGraph, file)
             }
         }
     }
