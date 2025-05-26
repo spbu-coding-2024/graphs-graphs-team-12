@@ -23,19 +23,19 @@ class VertexVM(
     fun onDrag(offset: Offset) {
         xVM.value = xVM.value + offset.x
         if (xVM.value > xMax.value) {
-            xVM.value = xMax.value.toDouble()
+            xVM.value = xMax.value.toDouble() - this.radius.value
         }
         if (xVM.value < 0) {
-            xVM.value = 0.0
+            xVM.value = 0.0 + this.radius.value
         }
         vertex.x = xVM.value
 
         yVM.value = yVM.value + offset.y
         if (yVM.value > yMax.value) {
-            yVM.value = yMax.value.toDouble()
+            yVM.value = yMax.value.toDouble() - this.radius.value
         }
         if (yVM.value < 0) {
-            yVM.value = 0.0
+            yVM.value = 0.0 + this.radius.value
         }
         vertex.y = yVM.value
 //        if (offset.x > 0) {

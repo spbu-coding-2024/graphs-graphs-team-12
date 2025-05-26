@@ -3,6 +3,7 @@ package viewmodel
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import graph.Graph
+import model.algo.buildMST
 import model.algo.louvain
 import model.io.sqliteIO.GraphReader
 
@@ -58,7 +59,9 @@ class GraphVM(
     }
 
     fun mst() {
-        TODO()
+        val edges = graph.buildMST()
+        if (edges == null) println("aaaa")
+        edges?.forEach { e[it]?.color?.value = Color.Red }
     }
 
     fun scc() {

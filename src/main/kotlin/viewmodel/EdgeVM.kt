@@ -10,7 +10,7 @@ class EdgeVM(
     to: VertexVM,
     val directed: Boolean,
 ) {
-    val color: MutableState<Color> = mutableStateOf(Color.Black)
+    var color: MutableState<Color> = mutableStateOf(Color.Black)
     val startPoint: Pair<State<Double>, State<Double>> =
         Pair(
             from.xVM,
