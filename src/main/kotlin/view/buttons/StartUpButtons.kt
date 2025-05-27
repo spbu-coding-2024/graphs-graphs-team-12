@@ -20,7 +20,6 @@ enum class ButtonType {
 fun startUpButton(
     type: ButtonType,
     text: String,
-    showParentWindow: MutableState<Boolean>,
     showGraph: MutableState<Boolean>,
     file: MutableState<String>,
 ) {
@@ -35,9 +34,9 @@ fun startUpButton(
     }
     if (openWin.value) {
         when (type) {
-            ButtonType.SQL -> fileKitOpener(openWin, "db", showParentWindow, showGraph, file)
-            ButtonType.JSON -> fileKitOpener(openWin, "json", showParentWindow, showGraph, file)
-            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showParentWindow, showGraph, file)
+            ButtonType.SQL -> fileKitOpener(openWin, "db", showGraph, file)
+            ButtonType.JSON -> fileKitOpener(openWin, "json", showGraph, file)
+            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showGraph, file)
         }
     }
 }

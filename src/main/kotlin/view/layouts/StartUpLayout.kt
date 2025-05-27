@@ -17,34 +17,31 @@ import view.windows.graphWindow
 
 @Composable
 fun startUpLayout() {
-    val show = remember { mutableStateOf(true) }
     val showGraph = remember { mutableStateOf((false)) }
     val file = remember { mutableStateOf("") }
     graphWindow(showGraph, file)
-    if (show.value) {
-        BoxWithConstraints(
+    BoxWithConstraints(
+        modifier =
+            Modifier
+                .fillMaxSize(),
+    ) {
+        val desiredWidth = Dp((maxWidth.value * 0.5).toFloat())
+        val xOffset = Dp((maxWidth.value * 0.25).toFloat())
+        val yOffset = Dp((maxHeight.value * 0.33).toFloat())
+
+        Column(
             modifier =
                 Modifier
-                    .fillMaxSize(),
+                    .width(desiredWidth)
+                    .offset(
+                        x = xOffset,
+                        y = yOffset,
+                    ),
         ) {
-            val desiredWidth = Dp((maxWidth.value * 0.5).toFloat())
-            val xOffset = Dp((maxWidth.value * 0.25).toFloat())
-            val yOffset = Dp((maxHeight.value * 0.33).toFloat())
-
-            Column(
-                modifier =
-                    Modifier
-                        .width(desiredWidth)
-                        .offset(
-                            x = xOffset,
-                            y = yOffset,
-                        ),
-            ) {
-                startUpText("Выберите, каким образом хотите загрузить граф:")
-                startUpButton(ButtonType.SQL, "SQLite database", show, showGraph, file)
-                startUpButton(ButtonType.NEO4J, "Neo4j database", show, showGraph, file)
-                startUpButton(ButtonType.JSON, "JSON", show, showGraph, file)
-            }
+            startUpText("Выберите, каким образом хотите загрузить граф:")
+            startUpButton(ButtonType.SQL, "SQLite database", showGraph, file)
+            startUpButton(ButtonType.NEO4J, "Neo4j database", showGraph, file)
+            startUpButton(ButtonType.JSON, "JSON", showGraph, file)
         }
     }
 }

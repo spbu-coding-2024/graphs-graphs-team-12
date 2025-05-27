@@ -1,7 +1,6 @@
 package viewmodel
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
@@ -10,33 +9,31 @@ import graph.Vertex
 
 class VertexVM(
     val vertex: Vertex,
-    val xMax: State<Float>,
-    val yMax: State<Float>,
 ) {
-    val xRatio: MutableState<Double> = mutableDoubleStateOf(vertex.x / xMax.value)
-    val yRatio: MutableState<Double> = mutableDoubleStateOf(vertex.y / yMax.value)
-    val xVM: MutableState<Double> = mutableDoubleStateOf(xRatio.value * xMax.value)
-    val yVM: MutableState<Double> = mutableDoubleStateOf(yRatio.value * yMax.value)
+    val xRatio: MutableState<Double> = mutableDoubleStateOf(vertex.x)
+    val yRatio: MutableState<Double> = mutableDoubleStateOf(vertex.y)
+    val xVM: MutableState<Double> = mutableDoubleStateOf(xRatio.value)
+    val yVM: MutableState<Double> = mutableDoubleStateOf(yRatio.value)
     val radius: MutableState<Double> = mutableDoubleStateOf(10.0)
     val color: MutableState<Color> = mutableStateOf<Color>(Color.Black)
 
     fun onDrag(offset: Offset) {
         xVM.value = xVM.value + offset.x
-        if (xVM.value > xMax.value) {
-            xVM.value = xMax.value.toDouble() - this.radius.value
-        }
-        if (xVM.value < 0) {
-            xVM.value = 0.0 + this.radius.value
-        }
+//        if (xVM.value > xMax.value) {
+//            xVM.value = xMax.value.toDouble() - this.radius.value
+//        }
+//        if (xVM.value < 0) {
+//            xVM.value = 0.0 + this.radius.value
+//        }
         vertex.x = xVM.value
 
         yVM.value = yVM.value + offset.y
-        if (yVM.value > yMax.value) {
-            yVM.value = yMax.value.toDouble() - this.radius.value
-        }
-        if (yVM.value < 0) {
-            yVM.value = 0.0 + this.radius.value
-        }
+//        if (yVM.value > yMax.value) {
+//            yVM.value = yMax.value.toDouble() - this.radius.value
+//        }
+//        if (yVM.value < 0) {
+//            yVM.value = 0.0 + this.radius.value
+//        }
         vertex.y = yVM.value
 //        if (offset.x > 0) {
 //            xVM.value =

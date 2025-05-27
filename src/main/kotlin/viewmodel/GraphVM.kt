@@ -1,6 +1,5 @@
 package viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import graph.Graph
 import model.algo.buildMST
@@ -16,11 +15,9 @@ enum class GwButtonType {
 
 class GraphVM(
     val readFrom: String,
-    val xMax: MutableState<Float>,
-    val yMax: MutableState<Float>,
 ) {
     val graph: Graph = this.read()
-    val v = graph.vertices.associateWith { v -> VertexVM(v, xMax, yMax) }
+    val v = graph.vertices.associateWith { v -> VertexVM(v) }
     val e =
         graph.edges
             .flatMap { e -> e.value }

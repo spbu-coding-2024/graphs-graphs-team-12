@@ -16,7 +16,7 @@ fun main() =
         val sampleGraph = Graph(false, true)
         val firstV = Vertex(10.0, 20.0)
         val secondV = Vertex(300.0, 10.0)
-        val thirdV = Vertex(10.0, 1000.0)
+        val thirdV = Vertex(10.0, 1500.0)
         sampleGraph.addVertex(thirdV)
         sampleGraph.addVertex(firstV)
         sampleGraph.addVertex(secondV)

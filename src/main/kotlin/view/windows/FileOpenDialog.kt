@@ -40,7 +40,6 @@ fun materialFileOpener(
 fun fileKitOpener(
     shouldShow: MutableState<Boolean>,
     extension: String,
-    showParentWindow: MutableState<Boolean>,
     showGraph: MutableState<Boolean>,
     file: MutableState<String>,
 ) {
@@ -53,7 +52,6 @@ fun fileKitOpener(
                 onResult = { it ->
                     if (it != null) {
                         file.value = it.absolutePath()
-                        showParentWindow.value = false
                         showGraph.value = true
                         shouldShow.value = false
                     }
