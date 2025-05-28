@@ -1,4 +1,4 @@
-package algo.dijkstra
+package model.algo
 
 import graph.Graph
 import graph.Vertex
