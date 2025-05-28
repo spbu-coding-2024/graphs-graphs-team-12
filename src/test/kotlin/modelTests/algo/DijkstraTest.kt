@@ -1,6 +1,6 @@
 package modelTests.algo
 
-import algo.dijkstra.dijkstra
+import model.algo.dijkstra
 import graph.Graph
 import graph.Vertex
 import org.junit.jupiter.api.BeforeEach
