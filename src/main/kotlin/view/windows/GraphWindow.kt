@@ -32,7 +32,10 @@ fun graphWindow(
     file: MutableState<String>,
 ) {
     if (show.value) {
-        Window(onCloseRequest = { show.value = false }, title = "") {
+        Window(onCloseRequest = {
+            file.value = ""
+            show.value = false
+        }, title = "") {
             val graphStateContainer: MutableState<GraphVM?> = mutableStateOf(null)
             var scale by remember { mutableStateOf(1f) }
             var offset by remember { mutableStateOf(Offset.Zero) }
