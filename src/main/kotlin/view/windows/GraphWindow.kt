@@ -3,6 +3,7 @@ package view.windows
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,18 +45,31 @@ fun graphWindow(
                     scale *= zoomChange
                     offset += offsetChange
                 }
+            val extension = file.value.split(".").last()
+            val showErrorDialog = mutableStateOf(false)
+            val errorMessage = mutableStateOf("")
+            val askLoading = mutableStateOf(false)
+            val loadTo = mutableStateOf("")
             val gVM =
                 remember {
                     GraphVM(
                         file.value,
+                        extension,
+                        showErrorDialog,
+                        errorMessage,
+                        askLoading,
+                        loadTo,
                     )
                 }
+            errorWindow(showErrorDialog, errorMessage)
+            loaderDialog(askLoading, loadTo, graphStateContainer)
             graphStateContainer.value = gVM
             BoxWithConstraints(
                 modifier =
                     Modifier
                         .fillMaxSize(),
             ) {
+                val height = maxHeight
                 BoxWithConstraints(
                     modifier =
                         Modifier
@@ -63,10 +77,6 @@ fun graphWindow(
                             .offset(x = Dp((0.15 * maxWidth.value).toFloat()))
                             .transformable(state = state)
                             .background(Color.LightGray),
-//                            .combinedClickable(
-//                                onClick = {},
-//                                onDoubleClick = { scale *= 2f },
-//                            ),
                 ) {
                     BoxWithConstraints(
                         modifier =
@@ -89,10 +99,32 @@ fun graphWindow(
                             .width(Dp((maxWidth.value * 0.15).toFloat()))
                             .height(maxHeight)
                             .background(Color.White),
+                    verticalArrangement = Arrangement.spacedBy(Dp(3f)),
                 ) {
-                    algoButton("mst", GwButtonType.MST, graphStateContainer.value)
-                    algoButton("Выделить сообщества", GwButtonType.COMMUNITIES, graphStateContainer.value)
-                    algoButton("Выделить ключевые вершины", GwButtonType.SCC, graphStateContainer.value)
+                    algoButton(
+                        "Выделить сообщества",
+                        GwButtonType.COMMUNITIES,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Найти минимальный остов",
+                        GwButtonType.MST,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Найти компоненты сильной связности",
+                        GwButtonType.SCC,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Загрузить граф в SQLite базу",
+                        GwButtonType.SQLITELOAD,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
                 }
             }
         }

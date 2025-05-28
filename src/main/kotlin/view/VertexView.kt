@@ -1,6 +1,7 @@
 package view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -38,7 +39,7 @@ fun vertexView(viewModel: VertexVM) {
                         change.consume()
                         viewModel.onDrag(dragAmount)
                     }
-                },
+                }.clickable(onClick = {}),
     ) {
     }
 //    scope.drawCircle(

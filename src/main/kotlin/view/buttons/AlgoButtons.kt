@@ -1,10 +1,13 @@
 package view.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import viewmodel.GraphVM
 import viewmodel.GwButtonType
 
@@ -13,13 +16,15 @@ fun algoButton(
     algoName: String,
     type: GwButtonType,
     viewModel: GraphVM?,
+    height: Dp,
 ) {
     Button(
-        onClick = { viewModel?.execute(type) },
+        onClick = { if (type == GwButtonType.SQLITELOAD) viewModel?.askInput?.value = true else viewModel?.execute(type) },
         modifier =
             Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(height),
     ) {
-        Text(algoName)
+        Text(text = algoName, textAlign = TextAlign.Center)
     }
 }

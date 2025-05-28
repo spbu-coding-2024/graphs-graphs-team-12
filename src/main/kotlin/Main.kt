@@ -13,7 +13,7 @@ fun app() {
 
 fun main() =
     application {
-        val sampleGraph = Graph(false, true)
+        val sampleGraph = Graph(true, true)
         val firstV = Vertex(10.0, 20.0)
         val secondV = Vertex(300.0, 10.0)
         val thirdV = Vertex(10.0, 1500.0)
@@ -21,6 +21,7 @@ fun main() =
         sampleGraph.addVertex(firstV)
         sampleGraph.addVertex(secondV)
         sampleGraph.addEdge(firstV, secondV)
+        sampleGraph.addEdge(firstV, thirdV)
         // sampleGraph.addEdge(secondV, firstV)
         val loader = GraphLoader(sampleGraph, "src/test/kotlin/modelTests/forDbFiles/showG.db")
         loader.loadGraph()

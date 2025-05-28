@@ -74,6 +74,17 @@ class SCCTests {
         assertEquals(expected, g.findSCC())
     }
 
+    @DisplayName("Two vertices connect by only one edge")
+    @Test
+    fun twoSCCs() {
+        val firstV = Vertex(1.0, 1.0)
+        val secondV = Vertex(1.0, 1.0)
+        g.addVertex(firstV)
+        g.addVertex(secondV)
+        g.addEdge(firstV, secondV)
+        assertEquals(2, g.findSCC()!!.size)
+    }
+
     @DisplayName("Run on undirected graph")
     @Test
     fun unsuitableGraph() {
