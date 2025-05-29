@@ -32,6 +32,8 @@ dependencies {
     implementation("io.github.vinceglb:filekit-dialogs:0.10.0-beta04")
     implementation("io.github.vinceglb:filekit-dialogs-compose:0.10.0-beta04")
     implementation("io.github.vinceglb:filekit-coil:0.10.0-beta04")
+    implementation("org.neo4j.driver:neo4j-java-driver:5.16.0")
+    testImplementation("org.neo4j.test:neo4j-harness:5.16.0")
     linter("com.pinterest.ktlint:ktlint-cli:1.5.0")
     implementation("org.gephi:gephi-toolkit:0.10.1")
     implementation(files("./gephi_tools/org-gephi-graph-api.jar"))
