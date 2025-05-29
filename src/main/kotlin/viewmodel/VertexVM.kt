@@ -16,6 +16,8 @@ class VertexVM(
     val yVM: MutableState<Double> = mutableDoubleStateOf(yRatio.value)
     val radius: MutableState<Double> = mutableDoubleStateOf(10.0)
     val color: MutableState<Color> = mutableStateOf<Color>(Color.Black)
+    val showLabel = mutableStateOf(false)
+    val label = vertex.name
 
     fun onDrag(offset: Offset) {
         xVM.value = xVM.value + offset.x

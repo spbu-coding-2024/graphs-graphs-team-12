@@ -78,12 +78,13 @@ class GraphReader(
     ): Map<Int, Vertex>? {
         try {
             conn.createStatement().use { statement ->
-                val query = "SELECT vertex, x, y FROM vertices"
+                val query = "SELECT vertex, x, y, name FROM vertices"
                 val data = statement.executeQuery(query)
                 val numeration = mutableMapOf<Int, Vertex>()
                 while (data.next()) {
                     val id = data.getInt("vertex")
-                    numeration.put(id, Vertex(data.getDouble("x"), data.getDouble("y")))
+                    println(data.getString("name"))
+                    numeration.put(id, Vertex(data.getDouble("x"), data.getDouble("y"), data.getString("name")))
                     graph.addVertex(numeration[id]!!)
                 }
                 return numeration.toMap()

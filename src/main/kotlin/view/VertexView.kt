@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
@@ -21,7 +22,8 @@ fun vertexView(viewModel: VertexVM) {
     val y: State<Double> = viewModel.yVM
     val radius: State<Double> = viewModel.radius
     val color: State<Color> = viewModel.color
-
+    val showLabel: State<Boolean> = viewModel.showLabel
+    val label: String = viewModel.label
     Box(
         modifier =
             Modifier
@@ -41,6 +43,16 @@ fun vertexView(viewModel: VertexVM) {
                     }
                 }.clickable(onClick = {}),
     ) {
+    }
+    if (showLabel.value) {
+        Text(
+            text = label,
+            modifier =
+                Modifier.offset(
+                    x = Dp((x.value + radius.value).toFloat()),
+                    y = Dp((y.value + radius.value).toFloat()),
+                ),
+        )
     }
 //    scope.drawCircle(
 //        color = viewModel.color.value,

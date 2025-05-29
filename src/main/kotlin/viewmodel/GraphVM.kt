@@ -22,6 +22,8 @@ enum class GwButtonType {
     MST,
     SCC,
     SQLITELOAD,
+    EDGELABELS,
+    VERTICESLABELS,
 }
 
 class GraphVM(
@@ -38,7 +40,7 @@ class GraphVM(
         graph.edges
             .flatMap { e -> e.value }
             .associateWith { e ->
-                EdgeVM(v[e.from]!!, v[e.to]!!, graph.directed)
+                EdgeVM(e, v[e.from]!!, v[e.to]!!, graph.directed)
             }
     val colors =
         listOf(
@@ -77,6 +79,8 @@ class GraphVM(
             GwButtonType.MST -> mst()
             GwButtonType.SCC -> scc()
             GwButtonType.SQLITELOAD -> load(GwButtonType.SQLITELOAD)
+            GwButtonType.EDGELABELS -> e.values.forEach { it.showLabel.value = !it.showLabel.value }
+            GwButtonType.VERTICESLABELS -> v.values.forEach { it.showLabel.value = !it.showLabel.value }
         }
     }
 
@@ -94,6 +98,18 @@ class GraphVM(
     fun mst() {
         val edges = graph.buildMST()
         (edges ?: return callError("Невозможно найти минимальный остов этого графа")).forEach {
+            (e[it] ?: return callError("Ошибка при выполнении алгоритма")).color.value =
+                Color.Red
+        }
+        val inversedEdges =
+            edges.map { edge ->
+                e.keys.first {
+                    it.from == edge.to &&
+                        it.to == edge.from &&
+                        it.weight == edge.weight
+                }
+            }
+        inversedEdges.forEach {
             (e[it] ?: return callError("Ошибка при выполнении алгоритма")).color.value =
                 Color.Red
         }

@@ -57,11 +57,11 @@ class GraphLoader(
             conn.createStatement().use { statement ->
                 val query =
                     "CREATE TABLE vertices " +
-                        "(vertex INTEGER PRIMARY KEY, x DOUBLE, y DOUBLE)"
+                        "(vertex INTEGER PRIMARY KEY, x DOUBLE, y DOUBLE, name TEXT)"
                 statement.execute(query)
             }
 
-            val insertQuery = "INSERT INTO vertices(vertex, x, y) VALUES(?, ?, ?)"
+            val insertQuery = "INSERT INTO vertices(vertex, x, y, name) VALUES(?, ?, ?, ?)"
             conn.prepareStatement(insertQuery).use { prepStatement ->
                 var index = -1
                 val indexation: Map<Vertex, Int> =
@@ -73,6 +73,8 @@ class GraphLoader(
                     prepStatement.setInt(1, indexation[vertex]!!)
                     prepStatement.setDouble(2, vertex.x)
                     prepStatement.setDouble(3, vertex.y)
+                    prepStatement.setString(4, vertex.name)
+                    println(vertex.name)
                     prepStatement.addBatch()
                 }
                 prepStatement.executeBatch()

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.Window
 import view.buttons.algoButton
+import view.buttons.switchButton
 import view.graphView
 import viewmodel.GraphVM
 import viewmodel.GwButtonType
@@ -123,6 +124,18 @@ fun graphWindow(
                         "Загрузить граф в SQLite базу",
                         GwButtonType.SQLITELOAD,
                         graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    switchButton(
+                        GwButtonType.EDGELABELS,
+                        "Подписать веса ребер",
+                        graphStateContainer,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    switchButton(
+                        GwButtonType.VERTICESLABELS,
+                        "Подписать имена вершин",
+                        graphStateContainer,
                         Dp((height.value * 0.05).toFloat()),
                     )
                 }
