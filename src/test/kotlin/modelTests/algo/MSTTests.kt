@@ -1,4 +1,4 @@
-package modelTests
+package modelTests.algo
 
 import graph.Edge
 import graph.Graph
