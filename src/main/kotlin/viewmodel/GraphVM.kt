@@ -33,6 +33,9 @@ class GraphVM(
     val errorMessage: MutableState<String>,
     val askInput: MutableState<Boolean>,
     val loadFile: MutableState<String>,
+    val showResult: MutableState<Boolean>,
+    val resultMessage: MutableState<String>,
+    val result: MutableState<Double>,
 ) {
     val graph: Graph = this.read()
     val v = graph.vertices.associateWith { v -> VertexVM(v) }
@@ -113,6 +116,9 @@ class GraphVM(
             (e[it] ?: return callError("Ошибка при выполнении алгоритма")).color.value =
                 Color.Red
         }
+        showResult.value = true
+        resultMessage.value = "Вес минимального остова:"
+        result.value = edges.fold(0.0) { sum, edge -> sum + edge.weight }
     }
 
     fun scc() {

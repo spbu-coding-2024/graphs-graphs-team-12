@@ -51,6 +51,9 @@ fun graphWindow(
             val errorMessage = mutableStateOf("")
             val askLoading = mutableStateOf(false)
             val loadTo = mutableStateOf("")
+            val showResult = mutableStateOf(false)
+            val resultMessage = mutableStateOf("")
+            val result = mutableStateOf(0.0)
             val gVM =
                 remember {
                     GraphVM(
@@ -60,6 +63,9 @@ fun graphWindow(
                         errorMessage,
                         askLoading,
                         loadTo,
+                        showResult,
+                        resultMessage,
+                        result,
                     )
                 }
             errorWindow(showErrorDialog, errorMessage)
@@ -139,6 +145,7 @@ fun graphWindow(
                         Dp((height.value * 0.05).toFloat()),
                     )
                 }
+                resultBar(showResult, resultMessage, result, maxWidth, maxHeight)
             }
         }
     }
