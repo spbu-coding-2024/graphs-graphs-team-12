@@ -1,6 +1,6 @@
 package modelTests.algo
 
-import algo.findCycles
+import model.algo.findCycles
 import graph.Graph
 import graph.Vertex
 import org.junit.jupiter.api.Assertions.assertEquals
