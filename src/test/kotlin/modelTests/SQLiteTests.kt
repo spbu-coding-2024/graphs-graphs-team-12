@@ -53,7 +53,7 @@ class SQLiteTests {
         g = Graph(true, true)
         val vertices = arrayListOf<Vertex>()
         repeat(3) {
-            vertices.add(Vertex(1.0, 1.0))
+            vertices.add(Vertex(1.0, 1.0, "vertex $it"))
             g.addVertex(vertices[it])
         }
         g.addEdge(vertices[0], vertices[1], 10.0)

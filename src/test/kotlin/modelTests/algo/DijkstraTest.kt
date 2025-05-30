@@ -1,8 +1,8 @@
 package modelTests.algo
 
-import model.algo.dijkstra
 import graph.Graph
 import graph.Vertex
+import model.algo.dijkstra
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

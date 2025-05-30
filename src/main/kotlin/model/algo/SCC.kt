@@ -2,6 +2,7 @@ package model.algo
 
 import graph.Graph
 import graph.Vertex
+import java.util.SortedSet
 import kotlin.math.max
 
 fun Graph.findSCC(): MutableSet<MutableSet<Vertex>>? {
@@ -42,13 +43,12 @@ fun Graph.findSCC(): MutableSet<MutableSet<Vertex>>? {
         g: Map<Vertex, Set<Pair<Vertex, Double>>>,
         u: Vertex,
         component: MutableSet<Vertex>,
-        visited: MutableMap<Vertex, Boolean>,
+        canVisit: SortedSet<Vertex>,
     ) {
         g[u]?.forEach {
-            if (!visited[it.first]!!) {
-                visited[it.first] = true
+            if (it.first in canVisit && it.first !in component) {
                 component.add(it.first)
-                dfsToBuildComponents(g, it.first, component, visited)
+                dfsToBuildComponents(g, it.first, component, canVisit)
             }
         }
     }
@@ -64,17 +64,18 @@ fun Graph.findSCC(): MutableSet<MutableSet<Vertex>>? {
     }
 
     val traversableVertices =
-        sourceGraphTimerStorage.keys.toSortedSet(
-            compareBy
-                { sourceGraphTimerStorage[it] },
-        )
+        sourceGraphTimerStorage.keys
+            .toSortedSet(
+                compareBy
+                    { sourceGraphTimerStorage[it] },
+            )
     val invertedGraph = invertEdges(this).getAdjacencyList()
     val stronglyConnectedComponents = mutableSetOf<MutableSet<Vertex>>()
     val visitedVertices = this.vertices.associateWith { false }.toMutableMap()
     while (!traversableVertices.isEmpty()) {
         val anotherVertex = traversableVertices.last()
         val newComponent = mutableSetOf<Vertex>(anotherVertex)
-        dfsToBuildComponents(invertedGraph, anotherVertex, newComponent, visitedVertices)
+        dfsToBuildComponents(invertedGraph, anotherVertex, newComponent, traversableVertices)
         newComponent.forEach { traversableVertices.remove(it) }
         stronglyConnectedComponents.add(newComponent)
     }
