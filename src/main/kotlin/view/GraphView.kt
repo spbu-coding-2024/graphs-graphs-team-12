@@ -14,7 +14,7 @@ fun graphView(viewModel: GraphVM) {
                 .fillMaxSize(),
     ) {
         viewModel.v.values.forEach { v ->
-            vertexView(v)
+            vertexView(v, viewModel)
         }
         viewModel.e.values.forEach { e ->
             edgeView(e, viewModel.graph.directed)

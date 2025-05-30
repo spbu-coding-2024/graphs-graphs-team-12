@@ -127,6 +127,24 @@ fun graphWindow(
                         Dp((height.value * 0.05).toFloat()),
                     )
                     algoButton(
+                        "Кратчайший путь(Дейкстра)",
+                        GwButtonType.DIJKSTRA,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Поиск циклов",
+                        GwButtonType.CYCLES,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat())
+                    )
+                    algoButton(
+                        "Выделение ключевых вершин",
+                        GwButtonType.HARMONIC,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat())
+                    )
+                    algoButton(
                         "Загрузить граф в SQLite базу",
                         GwButtonType.SQLITELOAD,
                         graphStateContainer.value,

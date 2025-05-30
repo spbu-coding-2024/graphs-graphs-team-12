@@ -16,6 +16,7 @@ class VertexVM(
     val yVM: MutableState<Double> = mutableDoubleStateOf(yRatio.value)
     val radius: MutableState<Double> = mutableDoubleStateOf(10.0)
     val color: MutableState<Color> = mutableStateOf<Color>(Color.Black)
+    var selected = mutableStateOf(false)
     val showLabel = mutableStateOf(false)
     val label = vertex.name
 

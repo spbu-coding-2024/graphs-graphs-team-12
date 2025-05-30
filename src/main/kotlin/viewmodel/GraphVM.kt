@@ -3,10 +3,14 @@ package viewmodel
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import graph.Graph
+import graph.Vertex
 import kotlinx.coroutines.delay
 import model.algo.buildMST
 import model.algo.findSCC
 import model.algo.louvain
+import model.algo.dijkstra
+import model.algo.findCycles
+import model.algo.getHarmonicCentrality
 import model.io.sqliteIO.GraphLoader
 import model.io.sqliteIO.GraphReader
 import java.io.File
@@ -21,6 +25,9 @@ enum class GwButtonType {
     COMMUNITIES,
     MST,
     SCC,
+    DIJKSTRA,
+    CYCLES,
+    HARMONIC,
     SQLITELOAD,
     EDGELABELS,
     VERTICESLABELS,
@@ -39,6 +46,7 @@ class GraphVM(
 ) {
     val graph: Graph = this.read()
     val v = graph.vertices.associateWith { v -> VertexVM(v) }
+    val selected = mutableListOf<VertexVM>()
     val e =
         graph.edges
             .flatMap { e -> e.value }
@@ -54,6 +62,16 @@ class GraphVM(
             Color.White,
             Color.Cyan,
         )
+
+    fun clean() {
+        graph.vertices.forEach {
+            v[it]?.color?.value = Color.Black
+        }
+        e.keys.forEach {
+            val edgeVM = e[it]
+            edgeVM?.color?.value = Color.Black
+        }
+    }
 
     fun callError(message: String) {
         error.value = true
@@ -81,6 +99,9 @@ class GraphVM(
             GwButtonType.COMMUNITIES -> communities()
             GwButtonType.MST -> mst()
             GwButtonType.SCC -> scc()
+            GwButtonType.DIJKSTRA -> dijkstraAlgo()
+            GwButtonType.CYCLES -> cycles()
+            GwButtonType.HARMONIC -> harmonic()
             GwButtonType.SQLITELOAD -> load(GwButtonType.SQLITELOAD)
             GwButtonType.EDGELABELS -> e.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.VERTICESLABELS -> v.values.forEach { it.showLabel.value = !it.showLabel.value }
@@ -88,6 +109,7 @@ class GraphVM(
     }
 
     fun communities() {
+        clean()
         val communities = graph.louvain()
         communities.keys.forEach { vert ->
             this.v[vert]?.color?.value =
@@ -99,6 +121,7 @@ class GraphVM(
     }
 
     fun mst() {
+        clean()
         val edges = graph.buildMST()
         (edges ?: return callError("Невозможно найти минимальный остов этого графа")).forEach {
             (e[it] ?: return callError("Ошибка при выполнении алгоритма")).color.value =
@@ -122,6 +145,7 @@ class GraphVM(
     }
 
     fun scc() {
+        clean()
         val res =
             (
                 graph.findSCC() ?: return
@@ -135,6 +159,70 @@ class GraphVM(
                     )
                 ).color.value = colors[index]
             }
+        }
+    }
+
+    fun dijkstraAlgo() {
+        clean()
+        if (selected.size != 2) {
+            return callError("Для алгоритма Дейкстры необходимо выбрать 2 вершины")
+        }
+        val dijkstra = dijkstra(graph, selected[0].vertex, selected[1].vertex)
+        if (dijkstra == null) return callError("Алгоритм Дейкстры не работает с отрицательными весами ребер")
+        if (dijkstra.first == Double.MAX_VALUE) return callError("Пути не существует")
+        val path = dijkstra.second
+
+        path.forEach {
+            v[it]?.color?.value = Color.Red
+        }
+
+        for (i in 0 until path.size - 1) {
+            val from = path[i]
+            val to = path[i + 1]
+            val edge = e.keys.find { it.from == from && it.to == to || it.from == to && it.to == from }
+            val edgeVM = e[edge]
+            edgeVM?.color?.value = Color.Red
+        }
+
+        showResult.value = true
+        resultMessage.value = "Кратчайшее расстояние:"
+        result.value = dijkstra.first
+    }
+
+    fun cycles() {
+        clean()
+        if (selected.size != 1) {
+            return callError("Выберите 1 вершину для поиска циклов")
+        }
+
+        val cycles = findCycles(graph, selected[0].vertex)
+        if (cycles.isEmpty()) return callError("Циклы не найдены")
+
+        cycles.forEach { path ->
+            path.forEach { v[it]?.color?.value = Color.Red }
+            for (i in 0 until path.size - 1) {
+                val edge = e.keys.find { it.from == path[i] && it.to == path[i + 1] || it.from == path[i + 1] && it.to == path[i] }
+                e[edge]?.color?.value = Color.Red
+            }
+        }
+    }
+
+    fun harmonic() {
+        clean()
+        val centralityMap = mutableMapOf<Vertex, Double>()
+        var maxCentrality = Double.MIN_VALUE
+
+        graph.vertices.forEach {
+            val value = getHarmonicCentrality(graph, it) ?: return callError("Алгоритм не работает с отрицательными весами")
+            centralityMap[it] = value
+            if (value > maxCentrality) maxCentrality = value
+        }
+
+        for ((vertex, value) in centralityMap) {
+            val vm = v[vertex] ?: continue
+            val norm = if (maxCentrality == 0.0) 0.0 else value / maxCentrality
+            vm.color.value = Color(red = norm.toFloat(), green = 0f, blue = (1f - norm).toFloat().coerceAtLeast(0f))
+            vm.radius.value = 10 + 30 * norm
         }
     }
 
