@@ -136,13 +136,19 @@ fun graphWindow(
                         "Поиск циклов",
                         GwButtonType.CYCLES,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat())
+                        Dp((height.value * 0.05).toFloat()),
                     )
                     algoButton(
                         "Выделение ключевых вершин",
                         GwButtonType.HARMONIC,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat())
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Сбросить все",
+                        GwButtonType.CLEAN,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
                     )
                     algoButton(
                         "Загрузить граф в SQLite базу",

@@ -1,8 +1,8 @@
 package modelTests.algo
 
-import model.algo.findCycles
 import graph.Graph
 import graph.Vertex
+import model.algo.findCycles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

@@ -14,11 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
-import viewmodel.VertexVM
 import viewmodel.GraphVM
+import viewmodel.VertexVM
 
 @Composable
-fun vertexView(viewModel: VertexVM, graphViewModel: GraphVM) {
+fun vertexView(
+    viewModel: VertexVM,
+    graphViewModel: GraphVM,
+) {
     val x: State<Double> = viewModel.xVM
     val y: State<Double> = viewModel.yVM
     val radius: State<Double> = viewModel.radius
@@ -45,11 +48,18 @@ fun vertexView(viewModel: VertexVM, graphViewModel: GraphVM) {
                 }.clickable(
                     onClick = {
                         viewModel.selected.value = !viewModel.selected.value
-                        if (viewModel.selected.value) viewModel.color.value = Color.Red
-                        else viewModel.color.value = Color.Black
-                        if (viewModel.selected.value) graphViewModel.selected.add(viewModel)
-                        else graphViewModel.selected.remove(viewModel)
-                    }),
+                        if (viewModel.selected.value) {
+                            viewModel.color.value = Color.Red
+                        } else {
+                            viewModel.color.value = Color.Black
+                        }
+                        if (viewModel.selected.value) {
+                            graphViewModel.selected.add(viewModel)
+                        } else {
+                            graphViewModel.selected.remove(viewModel)
+                        }
+                    },
+                ),
     ) {
     }
     if (showLabel.value) {

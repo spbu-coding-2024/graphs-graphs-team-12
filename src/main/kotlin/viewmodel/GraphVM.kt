@@ -6,11 +6,11 @@ import graph.Graph
 import graph.Vertex
 import kotlinx.coroutines.delay
 import model.algo.buildMST
-import model.algo.findSCC
-import model.algo.louvain
 import model.algo.dijkstra
 import model.algo.findCycles
+import model.algo.findSCC
 import model.algo.getHarmonicCentrality
+import model.algo.louvain
 import model.io.sqliteIO.GraphLoader
 import model.io.sqliteIO.GraphReader
 import java.io.File
@@ -31,6 +31,7 @@ enum class GwButtonType {
     SQLITELOAD,
     EDGELABELS,
     VERTICESLABELS,
+    CLEAN,
 }
 
 class GraphVM(
@@ -105,11 +106,12 @@ class GraphVM(
             GwButtonType.SQLITELOAD -> load(GwButtonType.SQLITELOAD)
             GwButtonType.EDGELABELS -> e.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.VERTICESLABELS -> v.values.forEach { it.showLabel.value = !it.showLabel.value }
+            GwButtonType.CLEAN -> clean()
         }
     }
 
     fun communities() {
-        clean()
+        // clean()
         val communities = graph.louvain()
         communities.keys.forEach { vert ->
             this.v[vert]?.color?.value =
@@ -121,7 +123,7 @@ class GraphVM(
     }
 
     fun mst() {
-        clean()
+        // clean()
         val edges = graph.buildMST()
         (edges ?: return callError("Невозможно найти минимальный остов этого графа")).forEach {
             (e[it] ?: return callError("Ошибка при выполнении алгоритма")).color.value =
@@ -145,7 +147,7 @@ class GraphVM(
     }
 
     fun scc() {
-        clean()
+        // clean()
         val res =
             (
                 graph.findSCC() ?: return
