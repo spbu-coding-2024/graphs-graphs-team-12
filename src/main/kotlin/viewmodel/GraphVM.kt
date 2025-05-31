@@ -1,6 +1,7 @@
 package viewmodel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import graph.Graph
 import graph.Vertex
@@ -11,6 +12,7 @@ import model.algo.findCycles
 import model.algo.findSCC
 import model.algo.getHarmonicCentrality
 import model.algo.louvain
+import model.io.neo4jIO.Neo4jRepository
 import model.io.sqliteIO.GraphLoader
 import model.io.sqliteIO.GraphReader
 import java.io.File
@@ -29,6 +31,7 @@ enum class GwButtonType {
     CYCLES,
     HARMONIC,
     SQLITELOAD,
+    NEO4JLOAD,
     EDGELABELS,
     VERTICESLABELS,
     CLEAN,
@@ -48,6 +51,13 @@ class GraphVM(
     val graph: Graph = this.read()
     val v = graph.vertices.associateWith { v -> VertexVM(v) }
     val selected = mutableListOf<VertexVM>()
+
+    val neo4jOpen = mutableStateOf(false)
+
+    val neo4jUri = mutableStateOf("")
+    val neo4jUser = mutableStateOf("")
+    val neo4jPassword = mutableStateOf("")
+
     val e =
         graph.edges
             .flatMap { e -> e.value }
@@ -104,6 +114,7 @@ class GraphVM(
             GwButtonType.CYCLES -> cycles()
             GwButtonType.HARMONIC -> harmonic()
             GwButtonType.SQLITELOAD -> load(GwButtonType.SQLITELOAD)
+            GwButtonType.NEO4JLOAD -> load(GwButtonType.NEO4JLOAD)
             GwButtonType.EDGELABELS -> e.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.VERTICESLABELS -> v.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.CLEAN -> clean()
@@ -243,6 +254,15 @@ class GraphVM(
                 return callError("Не получилось записать граф")
             } else {
                 return callError("Граф успешно записан")
+            }
+        }
+        if (db == GwButtonType.NEO4JLOAD) {
+            try {
+                val neo4jRepository = Neo4jRepository(neo4jUri.value, neo4jUser.value, neo4jPassword.value)
+                neo4jRepository.writeNeo4j(graph)
+                callError("Граф успешно записан")
+            } catch (e: Exception) {
+                callError("Ошибка записи в Neo4j: ${e.message}")
             }
         } else {
             return callError("В разработке:)")

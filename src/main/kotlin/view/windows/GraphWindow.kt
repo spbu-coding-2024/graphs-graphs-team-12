@@ -71,6 +71,7 @@ fun graphWindow(
             errorWindow(showErrorDialog, errorMessage)
             loaderDialog(askLoading, loadTo, graphStateContainer)
             graphStateContainer.value = gVM
+            neo4jLoaderDialog(graphStateContainer)
             BoxWithConstraints(
                 modifier =
                     Modifier
@@ -153,6 +154,12 @@ fun graphWindow(
                     algoButton(
                         "Загрузить граф в SQLite базу",
                         GwButtonType.SQLITELOAD,
+                        graphStateContainer.value,
+                        Dp((height.value * 0.05).toFloat()),
+                    )
+                    algoButton(
+                        "Загрузить граф в Neo4j базу",
+                        GwButtonType.NEO4JLOAD,
                         graphStateContainer.value,
                         Dp((height.value * 0.05).toFloat()),
                     )
