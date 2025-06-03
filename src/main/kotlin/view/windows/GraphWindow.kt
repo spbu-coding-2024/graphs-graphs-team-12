@@ -46,7 +46,12 @@ fun graphWindow(
                     scale *= zoomChange
                     offset += offsetChange
                 }
-            val extension = file.value.split(".").last()
+            val extension: String
+            if (file.value.startsWith("bolt") || file.value.startsWith("neo4j")) {
+                extension = "neo4j"
+            } else {
+                extension = file.value.split(".").last()
+            }
             val showErrorDialog = mutableStateOf(false)
             val errorMessage = mutableStateOf("")
             val askLoading = mutableStateOf(false)

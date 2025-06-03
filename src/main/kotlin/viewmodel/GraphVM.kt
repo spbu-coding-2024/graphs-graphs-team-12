@@ -93,6 +93,7 @@ class GraphVM(
     fun read(): Graph {
         when (this.extension) {
             "db" -> return this.readSQL()
+            "neo4j" -> return this.readNeo4j()
             else -> TODO()
         }
     }
@@ -105,6 +106,17 @@ class GraphVM(
         }
         return g ?: Graph(false, false)
     }
+
+    fun readNeo4j(): Graph {
+    return try {
+        val (uri, user, password) = readFrom.split(";")
+        val repo = Neo4jRepository(uri, user, password)
+        repo.readNeo4j() ?: Graph(false, false)
+    } catch (e: Exception) {
+        callError("Ошибка чтения из Neo4j: ${e.message}")
+        Graph(false, false)
+    }
+}
 
     fun execute(action: GwButtonType) {
         when (action) {
@@ -259,6 +271,10 @@ class GraphVM(
         }
         if (db == GwButtonType.NEO4JLOAD) {
             try {
+                v.forEach { (vertex, vm) ->
+                    vertex.x = vm.xVM.value
+                    vertex.y = vm.yVM.value
+                }
                 val neo4jRepository = Neo4jRepository(neo4jUri.value, neo4jUser.value, neo4jPassword.value)
                 neo4jRepository.writeNeo4j(graph)
                 callError("Граф успешно записан")
