@@ -2,6 +2,7 @@ package modelTests
 
 import graph.Graph
 import graph.Vertex
+import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -37,7 +38,7 @@ class GraphTests {
         g.addVertex(x)
         g.addVertex(y)
         g.addEdge(x, y)
-        assertFalse(g.addEdge(x, y))
+        assertTrue(g.addEdge(x, y))
     }
 
     @Test

@@ -13,18 +13,17 @@ fun app() {
 
 fun main() =
     application {
-        val sampleGraph = Graph(false, true)
-        val firstV = Vertex(10.0, 20.0, "вершина 1")
-        val secondV = Vertex(300.0, 10.0, "вершина 2")
-        val thirdV = Vertex(10.0, 1500.0, "вершина 3")
-        sampleGraph.addVertex(thirdV)
-        sampleGraph.addVertex(firstV)
-        sampleGraph.addVertex(secondV)
-        sampleGraph.addEdge(firstV, secondV)
-        sampleGraph.addEdge(firstV, thirdV)
-        sampleGraph.addEdge(secondV, thirdV, 100.0)
-        // sampleGraph.addEdge(secondV, firstV)
-        val loader = GraphLoader(sampleGraph, "src/test/kotlin/modelTests/forDbFiles/showG.db")
+        val dirW = Graph(true, true)
+        val vertices = ArrayList<Vertex>()
+        repeat(4) {
+            vertices.add(Vertex(100.0 + it.toDouble() * 50.0, 100.0 + it.toDouble() * 50.0, "вершина $it"))
+        }
+        repeat(4) { dirW.addVertex(vertices[it]) }
+        dirW.addEdge(vertices[0], vertices[1], 3.0)
+        dirW.addEdge(vertices[2], vertices[3], 5.0)
+        dirW.addEdge(vertices[3], vertices[2], 4.0)
+
+        val loader = GraphLoader(dirW, "src/test/kotlin/modelTests/forDbFiles/dirW.db")
         loader.loadGraph()
         Window(onCloseRequest = ::exitApplication, title = "") {
             app()

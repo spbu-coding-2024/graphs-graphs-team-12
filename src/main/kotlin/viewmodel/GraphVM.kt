@@ -75,8 +75,10 @@ class GraphVM(
         )
 
     fun clean() {
+        selected.removeAll(selected)
         graph.vertices.forEach {
             v[it]?.color?.value = Color.Black
+            v[it]?.radius?.value = 10.0
         }
         e.keys.forEach {
             val edgeVM = e[it]

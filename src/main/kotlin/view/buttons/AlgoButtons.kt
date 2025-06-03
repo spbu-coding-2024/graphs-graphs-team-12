@@ -20,10 +20,14 @@ fun algoButton(
 ) {
     Button(
         onClick = {
-            if (type == GwButtonType.SQLITELOAD) viewModel?.askInput?.value = true
-            else if (type == GwButtonType.NEO4JLOAD) viewModel?.neo4jOpen?.value = true
-            else viewModel?.execute(type)
-                  },
+            if (type == GwButtonType.SQLITELOAD) {
+                viewModel?.askInput?.value = true
+            } else if (type == GwButtonType.NEO4JLOAD) {
+                viewModel?.neo4jOpen?.value = true
+            } else {
+                viewModel?.execute(type)
+            }
+        },
         modifier =
             Modifier
                 .fillMaxWidth()
