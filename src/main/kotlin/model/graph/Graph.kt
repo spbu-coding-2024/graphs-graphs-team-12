@@ -16,6 +16,9 @@ class Graph(
         v: Vertex,
         w: Double = 1.0,
     ): Boolean {
+        if (!this.directed && edges[u]?.any { it.to == v && it.weight == w } ?: false) {
+            return true
+        }
         if (u == v) {
             return false
         }
