@@ -44,19 +44,32 @@ fun fileKitOpener(
     file: MutableState<String>,
 ) {
     if (shouldShow.value) {
-        val launcher =
-            rememberFilePickerLauncher(
-                type = FileKitType.File(extension),
-                mode = FileKitMode.Single,
-                title = "Выберите .$extension файл",
-                onResult = { it ->
-                    if (it != null) {
-                        file.value = it.absolutePath()
-                        showGraph.value = true
-                        shouldShow.value = false
-                    }
+        if (extension == "neo4j") {
+            neo4jReadDialog(
+                onConfirm = { uri, user, password ->
+                    file.value = "$uri;$user;$password"
+                    showGraph.value = true
+                    shouldShow.value = false
                 },
+                onDismiss = {
+                    shouldShow.value = false
+                }
             )
-        launcher.launch()
+        } else {
+            val launcher =
+                rememberFilePickerLauncher(
+                    type = FileKitType.File(extension),
+                    mode = FileKitMode.Single,
+                    title = "Выберите .$extension файл",
+                    onResult = { it ->
+                        if (it != null) {
+                            file.value = it.absolutePath()
+                            showGraph.value = true
+                            shouldShow.value = false
+                        }
+                    },
+                )
+            launcher.launch()
+        }
     }
 }

@@ -36,7 +36,7 @@ fun startUpButton(
         when (type) {
             ButtonType.SQL -> fileKitOpener(openWin, "db", showGraph, file)
             ButtonType.JSON -> fileKitOpener(openWin, "json", showGraph, file)
-            ButtonType.NEO4J -> fileKitOpener(openWin, "cypher", showGraph, file)
+            ButtonType.NEO4J -> fileKitOpener(openWin, "neo4j", showGraph, file)
         }
     }
 }
