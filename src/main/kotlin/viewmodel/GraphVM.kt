@@ -108,16 +108,15 @@ class GraphVM(
         return g ?: Graph(false, false)
     }
 
-    fun readNeo4j(): Graph {
-    return try {
-        val (uri, user, password) = readFrom.split(";")
-        val repo = Neo4jRepository(uri, user, password)
-        repo.readNeo4j() ?: Graph(false, false)
-    } catch (e: Exception) {
-        callError("Ошибка чтения из Neo4j: ${e.message}")
-        Graph(false, false)
-    }
-}
+    fun readNeo4j(): Graph =
+        try {
+            val (uri, user, password) = readFrom.split(";")
+            val repo = Neo4jRepository(uri, user, password)
+            repo.readNeo4j() ?: Graph(false, false)
+        } catch (e: Exception) {
+            callError("Ошибка чтения из Neo4j: ${e.message}")
+            Graph(false, false)
+        }
 
     fun execute(action: GwButtonType) {
         when (action) {
