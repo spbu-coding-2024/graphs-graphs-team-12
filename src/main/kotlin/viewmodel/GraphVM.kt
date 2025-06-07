@@ -72,6 +72,7 @@ class GraphVM(
             Color.Yellow,
             Color.White,
             Color.Cyan,
+            Color.Magenta,
         )
 
     fun clean() {
