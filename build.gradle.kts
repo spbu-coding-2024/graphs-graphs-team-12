@@ -40,6 +40,7 @@ dependencies {
     implementation(files("./gephi_tools/org-gephi-statistics-api.jar"))
     implementation(files("./gephi_tools/org-gephi-statistics-plugin.jar"))
     implementation(files("./gephi_tools/org-gephi-utils-longtask.jar"))
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 val lintCheck by tasks.registering(JavaExec::class) {
