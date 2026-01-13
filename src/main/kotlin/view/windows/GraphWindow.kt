@@ -6,21 +6,30 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Checkbox
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import view.buttons.algoButton
 import view.buttons.switchButton
@@ -111,74 +120,113 @@ fun graphWindow(
                         Modifier
                             .width(Dp((maxWidth.value * 0.15).toFloat()))
                             .height(maxHeight)
-                            .background(Color.White),
-                    verticalArrangement = Arrangement.spacedBy(Dp(3f)),
+                            .background(Color.White)
+                            .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
                 ) {
+                    val btnHeight = 45.dp
                     algoButton(
                         "Выделить сообщества",
                         GwButtonType.COMMUNITIES,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
+                    algoButton(
+                        "Раскладка (ForceAtlas2)",
+                        GwButtonType.LAYOUT,
+                        graphStateContainer.value,
+                        btnHeight,
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        val isChecked = graphStateContainer.value?.isStrongGravity?.value ?: false
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = {
+                                graphStateContainer.value?.isStrongGravity?.value = it
+                            },
+                        )
+                        Text("Сильная гравитация", fontSize = 12.sp)
+                    }
                     algoButton(
                         "Найти минимальный остов",
                         GwButtonType.MST,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     algoButton(
                         "Найти компоненты сильной связности",
                         GwButtonType.SCC,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     algoButton(
-                        "Кратчайший путь(Дейкстра)",
+                        "Дейкстра",
                         GwButtonType.DIJKSTRA,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
+                    )
+                    algoButton(
+                        "Форд-Беллман",
+                        GwButtonType.BELLMAN_FORD,
+                        graphStateContainer.value,
+                        btnHeight,
                     )
                     algoButton(
                         "Поиск циклов",
                         GwButtonType.CYCLES,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
+                    )
+                    algoButton(
+                        "Найти мосты",
+                        GwButtonType.BRIDGES,
+                        graphStateContainer.value,
+                        btnHeight,
                     )
                     algoButton(
                         "Выделение ключевых вершин",
                         GwButtonType.HARMONIC,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     algoButton(
                         "Сбросить все",
                         GwButtonType.CLEAN,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     algoButton(
                         "Загрузить граф в SQLite базу",
                         GwButtonType.SQLITELOAD,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     algoButton(
                         "Загрузить граф в Neo4j базу",
                         GwButtonType.NEO4JLOAD,
                         graphStateContainer.value,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
+                    )
+                    algoButton(
+                        "Сохранить JSON",
+                        GwButtonType.JSON_SAVE,
+                        graphStateContainer.value,
+                        btnHeight,
                     )
                     switchButton(
                         GwButtonType.EDGELABELS,
                         "Подписать веса ребер",
                         graphStateContainer,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                     switchButton(
                         GwButtonType.VERTICESLABELS,
                         "Подписать имена вершин",
                         graphStateContainer,
-                        Dp((height.value * 0.05).toFloat()),
+                        btnHeight,
                     )
                 }
                 resultBar(showResult, resultMessage, result, maxWidth, maxHeight)

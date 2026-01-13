@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import viewmodel.GraphVM
-import viewmodel.GwButtonType
 
 @Composable
 fun loaderDialog(
@@ -22,7 +21,11 @@ fun loaderDialog(
             onDismissRequest = { },
             confirmButton = {
                 Button(onClick = {
-                    viewModel.value?.execute(GwButtonType.SQLITELOAD)
+                    val vm = viewModel.value
+                    if (vm != null) {
+                        vm.execute(vm.pendingAction)
+                    }
+
                     loadFile.value = ""
                     show.value = false
                 }) { Text("Записать") }
