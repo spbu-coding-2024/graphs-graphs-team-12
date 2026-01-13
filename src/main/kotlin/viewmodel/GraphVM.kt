@@ -6,12 +6,16 @@ import androidx.compose.ui.graphics.Color
 import graph.Graph
 import graph.Vertex
 import kotlinx.coroutines.delay
+import model.algo.applyForceAtlas2
+import model.algo.bellman
 import model.algo.buildMST
 import model.algo.dijkstra
+import model.algo.findBridges
 import model.algo.findCycles
 import model.algo.findSCC
 import model.algo.getHarmonicCentrality
 import model.algo.louvain
+import model.io.json.JsonGraphIO
 import model.io.neo4jIO.Neo4jRepository
 import model.io.sqliteIO.GraphLoader
 import model.io.sqliteIO.GraphReader
@@ -35,6 +39,10 @@ enum class GwButtonType {
     EDGELABELS,
     VERTICESLABELS,
     CLEAN,
+    JSON_SAVE,
+    BRIDGES,
+    BELLMAN_FORD,
+    LAYOUT,
 }
 
 class GraphVM(
@@ -51,9 +59,9 @@ class GraphVM(
     val graph: Graph = this.read()
     val v = graph.vertices.associateWith { v -> VertexVM(v) }
     val selected = mutableListOf<VertexVM>()
-
+    val isStrongGravity = mutableStateOf(false)
     val neo4jOpen = mutableStateOf(false)
-
+    var pendingAction: GwButtonType = GwButtonType.SQLITELOAD
     val neo4jUri = mutableStateOf("")
     val neo4jUser = mutableStateOf("")
     val neo4jPassword = mutableStateOf("")
@@ -76,15 +84,16 @@ class GraphVM(
         )
 
     fun clean() {
-        selected.removeAll(selected)
-        graph.vertices.forEach {
-            v[it]?.color?.value = Color.Black
-            v[it]?.radius?.value = 10.0
+        v.values.forEach {
+            it.selected.value = false
+            it.color.value = Color.Black
+            it.radius.value = 10.0
         }
         e.keys.forEach {
             val edgeVM = e[it]
             edgeVM?.color?.value = Color.Black
         }
+        selected.clear()
     }
 
     fun callError(message: String) {
@@ -96,7 +105,8 @@ class GraphVM(
         when (this.extension) {
             "db" -> return this.readSQL()
             "neo4j" -> return this.readNeo4j()
-            else -> TODO()
+            "json" -> return this.readJson()
+            else -> return Graph(false, false)
         }
     }
 
@@ -108,6 +118,15 @@ class GraphVM(
         }
         return g ?: Graph(false, false)
     }
+
+    fun readJson(): Graph =
+        try {
+            val io = JsonGraphIO()
+            io.loadGraph(this.readFrom)
+        } catch (e: Exception) {
+            callError("Ошибка чтения из JSONr: ${e.message}")
+            Graph(false, false)
+        }
 
     fun readNeo4j(): Graph =
         try {
@@ -127,8 +146,12 @@ class GraphVM(
             GwButtonType.DIJKSTRA -> dijkstraAlgo()
             GwButtonType.CYCLES -> cycles()
             GwButtonType.HARMONIC -> harmonic()
+            GwButtonType.LAYOUT -> layout()
+            GwButtonType.BRIDGES -> bridges()
+            GwButtonType.BELLMAN_FORD -> bellmanFordAlgo()
             GwButtonType.SQLITELOAD -> load(GwButtonType.SQLITELOAD)
             GwButtonType.NEO4JLOAD -> load(GwButtonType.NEO4JLOAD)
+            GwButtonType.JSON_SAVE -> load(GwButtonType.JSON_SAVE)
             GwButtonType.EDGELABELS -> e.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.VERTICESLABELS -> v.values.forEach { it.showLabel.value = !it.showLabel.value }
             GwButtonType.CLEAN -> clean()
@@ -189,6 +212,82 @@ class GraphVM(
         }
     }
 
+    fun bridges() {
+        clean()
+        try {
+            val foundBridges = findBridges(graph)
+            if (foundBridges.isEmpty()) {
+                callError("Мосты не найдены")
+                return
+            }
+            foundBridges.forEach { bridge ->
+                var edgeVM = e[bridge]
+                if (edgeVM == null) {
+                    val key =
+                        e.keys.find {
+                            it.from == bridge.from && it.to == bridge.to && it.weight == bridge.weight
+                        }
+                    if (key != null) edgeVM = e[key]
+                }
+                if (edgeVM == null) return callError("Ошибка визуализации моста (View не найден)")
+
+                edgeVM.color.value = Color.Red
+                if (!graph.directed) {
+                    val revKey =
+                        e.keys.find {
+                            it.from == bridge.to && it.to == bridge.from && it.weight == bridge.weight
+                        }
+                    if (revKey != null) e[revKey]?.color?.value = Color.Red
+                }
+            }
+            showResult.value = true
+            resultMessage.value = "Найдено мостов:"
+            result.value = foundBridges.size.toDouble()
+        } catch (e: Exception) {
+            callError("Ошибка алгоритма мостов: ${e.message}")
+        }
+    }
+
+    fun bellmanFordAlgo() {
+        val selection = v.values.filter { it.selected.value }
+
+        if (selection.size != 2) {
+            return callError("Выберите 2 вершины (сейчас выбрано: ${selection.size})")
+        }
+        val startVM = selection[0]
+        val endVM = selection[1]
+        clean()
+        startVM.selected.value = true
+        startVM.color.value = Color.Red
+        endVM.selected.value = true
+        endVM.color.value = Color.Red
+
+        try {
+            val res = bellman(graph, startVM.vertex, endVM.vertex)
+            if (res == null) return callError("Путь не найден (или цикл)")
+            val (dist, path) = res
+            path.forEach { v[it]?.color?.value = Color.Red }
+            for (i in 0 until path.size - 1) {
+                val u = path[i]
+                val w = path[i + 1]
+                val edgesToColor =
+                    e.keys.filter {
+                        (it.from == u && it.to == w) || (it.from == w && it.to == u)
+                    }
+
+                edgesToColor.forEach { key ->
+                    e[key]?.color?.value = Color.Red
+                }
+            }
+
+            showResult.value = true
+            resultMessage.value = "Кратчайший путь:"
+            result.value = dist
+        } catch (e: Exception) {
+            callError("Ошибка: ${e.message}")
+        }
+    }
+
     fun dijkstraAlgo() {
         clean()
         if (selected.size != 2) {
@@ -228,7 +327,8 @@ class GraphVM(
         cycles.forEach { path ->
             path.forEach { v[it]?.color?.value = Color.Red }
             for (i in 0 until path.size - 1) {
-                val edge = e.keys.find { it.from == path[i] && it.to == path[i + 1] || it.from == path[i + 1] && it.to == path[i] }
+                val edge =
+                    e.keys.find { it.from == path[i] && it.to == path[i + 1] || it.from == path[i + 1] && it.to == path[i] }
                 e[edge]?.color?.value = Color.Red
             }
         }
@@ -240,7 +340,8 @@ class GraphVM(
         var maxCentrality = Double.MIN_VALUE
 
         graph.vertices.forEach {
-            val value = getHarmonicCentrality(graph, it) ?: return callError("Алгоритм не работает с отрицательными весами")
+            val value =
+                getHarmonicCentrality(graph, it) ?: return callError("Алгоритм не работает с отрицательными весами")
             centralityMap[it] = value
             if (value > maxCentrality) maxCentrality = value
         }
@@ -250,6 +351,22 @@ class GraphVM(
             val norm = if (maxCentrality == 0.0) 0.0 else value / maxCentrality
             vm.color.value = Color(red = norm.toFloat(), green = 0f, blue = (1f - norm).toFloat().coerceAtLeast(0f))
             vm.radius.value = 10 + 30 * norm
+        }
+    }
+
+    fun layout() {
+        if (graph.vertices.isEmpty()) return callError("Граф пуст")
+        try {
+            applyForceAtlas2(graph, useStrongGravity = isStrongGravity.value)
+            graph.vertices.forEach { vertex ->
+                val vm = v[vertex]
+                if (vm != null) {
+                    vm.xVM.value = vertex.x
+                    vm.yVM.value = vertex.y
+                }
+            }
+        } catch (e: Exception) {
+            callError("Ошибка раскладки: ${e.message}")
         }
     }
 
@@ -282,8 +399,19 @@ class GraphVM(
             } catch (e: Exception) {
                 callError("Ошибка записи в Neo4j: ${e.message}")
             }
-        } else {
-            return callError("В разработке:)")
+        }
+        if (db == GwButtonType.JSON_SAVE) {
+            if (loadFile.value.isEmpty()) return callError("Введите имя файла")
+            val path = if (loadFile.value.endsWith(".json")) loadFile.value else "${loadFile.value}.json"
+
+            try {
+                val io = JsonGraphIO()
+                io.saveGraph(graph, path)
+                callError("Успешно сохранено: $path") // Уведомление об успехе
+            } catch (e: Exception) {
+                callError("Ошибка сохранения JSON: ${e.message}")
+            }
+            return
         }
     }
 }

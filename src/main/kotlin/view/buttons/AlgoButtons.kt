@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import viewmodel.GraphVM
 import viewmodel.GwButtonType
 
@@ -20,7 +21,8 @@ fun algoButton(
 ) {
     Button(
         onClick = {
-            if (type == GwButtonType.SQLITELOAD) {
+            if (type == GwButtonType.SQLITELOAD || type == GwButtonType.JSON_SAVE) {
+                viewModel?.pendingAction = type
                 viewModel?.askInput?.value = true
             } else if (type == GwButtonType.NEO4JLOAD) {
                 viewModel?.neo4jOpen?.value = true
@@ -33,6 +35,6 @@ fun algoButton(
                 .fillMaxWidth()
                 .height(height),
     ) {
-        Text(text = algoName, textAlign = TextAlign.Center)
+        Text(text = algoName, textAlign = TextAlign.Center, fontSize = 11.sp)
     }
 }
